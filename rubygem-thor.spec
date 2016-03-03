@@ -10,7 +10,7 @@
 Summary: Thor is a toolkit for building powerful command-line interfaces
 Name: %{?scl_prefix}rubygem-%{gem_name}
 Version: 0.19.1
-Release: 5%{?dist}
+Release: 6%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://whatisthor.com/
@@ -26,7 +26,7 @@ BuildRequires: %{?scl_prefix_ruby}ruby
 %if %{enable_test} > 0
 BuildRequires: %{?scl_prefix}rubygem(rspec) >= 3
 # Not necessary - omitting 2 tests
-#BuildRequires: %{?scl_prefix}rubygem(fakeweb)
+#BuildRequires: %%{?scl_prefix}rubygem(fakeweb)
 BuildRequires: git
 %endif
 BuildArch: noarch
@@ -64,8 +64,13 @@ cp -pa .%{_bindir}/* \
 
 find %{buildroot}%{gem_instdir}/bin -type f | xargs chmod a+x
 
+%{?scl:scl enable %{scl} - << \EOF}
 find %{buildroot}%{gem_instdir}/bin -type f | \
-  xargs -n 1 sed -i -e 's"^#!/usr/bin/env ruby"#!/usr/bin/ruby"'
+  xargs -n 1 sed -i -e "s|^#\!/usr/bin/env ruby|#\!`which ruby`|"
+
+find %{buildroot}%{_bindir} -type f | \
+  xargs -n 1 sed -i -e "s|^#\!/usr/bin/ruby|#\!`which ruby`|"
+%{?scl:EOF}
 
 %check
 %if %{enable_test} > 0
@@ -115,6 +120,9 @@ popd
 %{gem_instdir}/thor.gemspec
 
 %changelog
+* Wed Mar 02 2016 Pavel Valena <pvalena@redhat.com> - 0.19.1-6
+- Fix shebang replacement
+
 * Mon Feb 29 2016 Pavel Valena <pvalena@redhat.com> - 0.19.1-5
 - Add Requires and Provides
 
