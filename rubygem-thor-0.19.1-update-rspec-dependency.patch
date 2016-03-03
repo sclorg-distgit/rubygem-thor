@@ -1,0 +1,104 @@
+From b5f8c410da4ad315a8c45a91fdcd9a4a2cb57d7d Mon Sep 17 00:00:00 2001
+From: Erik Michaels-Ober <sferik@gmail.com>
+Date: Mon, 9 Jun 2014 12:01:27 +0200
+Subject: [PATCH] Update rspec dependency to >= 3
+
+---
+ Gemfile                  |  4 ++--
+ spec/command_spec.rb     |  2 +-
+ spec/quality_spec.rb     |  2 +-
+ spec/shell/basic_spec.rb | 18 +++++++++---------
+ 4 files changed, 13 insertions(+), 13 deletions(-)
+
+diff --git a/spec/command_spec.rb b/spec/command_spec.rb
+index b09270d..6e5ad2c 100644
+--- a/spec/command_spec.rb
++++ b/spec/command_spec.rb
+@@ -58,7 +58,7 @@ def command(options = {})
+   describe "#run" do
+     it "runs a command by calling a method in the given instance" do
+       dub = double
+-      expect(dub).to receive(:can_has).and_return { |*args| args }
++      expect(dub).to receive(:can_has) { |*args| args }
+       expect(command.run(dub, [1, 2, 3])).to eq([1, 2, 3])
+     end
+ 
+diff --git a/spec/quality_spec.rb b/spec/quality_spec.rb
+index 94f5100..6fa2798 100644
+--- a/spec/quality_spec.rb
++++ b/spec/quality_spec.rb
+@@ -39,7 +39,7 @@ def check_for_extra_spaces(filename)
+   end
+ 
+   RSpec::Matchers.define :be_well_formed do
+-    failure_message_for_should do |actual|
++    failure_message do |actual|
+       actual.join("\n")
+     end
+ 
+diff --git a/spec/shell/basic_spec.rb b/spec/shell/basic_spec.rb
+index 417f371..0ca8cf1 100644
+--- a/spec/shell/basic_spec.rb
++++ b/spec/shell/basic_spec.rb
+@@ -68,34 +68,34 @@ def shell
+   describe "#yes?" do
+     it "asks the user and returns true if the user replies yes" do
+       expect(Thor::LineEditor).to receive(:readline).with("Should I overwrite it? ", :add_to_history => false).and_return("y")
+-      expect(shell.yes?("Should I overwrite it?")).to be_true
++      expect(shell.yes?("Should I overwrite it?")).to be true
+     end
+ 
+     it "asks the user and returns false if the user replies no" do
+       expect(Thor::LineEditor).to receive(:readline).with("Should I overwrite it? ", :add_to_history => false).and_return("n")
+-      expect(shell.yes?("Should I overwrite it?")).not_to be_true
++      expect(shell.yes?("Should I overwrite it?")).not_to be true
+     end
+ 
+     it "asks the user and returns false if the user replies with an answer other than yes or no" do
+       expect(Thor::LineEditor).to receive(:readline).with("Should I overwrite it? ", :add_to_history => false).and_return("foobar")
+-      expect(shell.yes?("Should I overwrite it?")).to be_false
++      expect(shell.yes?("Should I overwrite it?")).to be false
+     end
+   end
+ 
+   describe "#no?" do
+     it "asks the user and returns true if the user replies no" do
+       expect(Thor::LineEditor).to receive(:readline).with("Should I overwrite it? ", :add_to_history => false).and_return("n")
+-      expect(shell.no?("Should I overwrite it?")).to be_true
++      expect(shell.no?("Should I overwrite it?")).to be true
+     end
+ 
+     it "asks the user and returns false if the user replies yes" do
+       expect(Thor::LineEditor).to receive(:readline).with("Should I overwrite it? ", :add_to_history => false).and_return("Yes")
+-      expect(shell.no?("Should I overwrite it?")).to be_false
++      expect(shell.no?("Should I overwrite it?")).to be false
+     end
+ 
+     it "asks the user and returns false if the user replies with an answer other than yes or no" do
+       expect(Thor::LineEditor).to receive(:readline).with("Should I overwrite it? ", :add_to_history => false).and_return("foobar")
+-      expect(shell.no?("Should I overwrite it?")).to be_false
++      expect(shell.no?("Should I overwrite it?")).to be false
+     end
+   end
+ 
+@@ -283,17 +283,17 @@ def  #456  Lanç...
+ 
+     it "returns true if the user chooses default option" do
+       expect(Thor::LineEditor).to receive(:readline).and_return("")
+-      expect(shell.file_collision("foo")).to be_true
++      expect(shell.file_collision("foo")).to be true
+     end
+ 
+     it "returns false if the user chooses no" do
+       expect(Thor::LineEditor).to receive(:readline).and_return("n")
+-      expect(shell.file_collision("foo")).to be_false
++      expect(shell.file_collision("foo")).to be false
+     end
+ 
+     it "returns true if the user chooses yes" do
+       expect(Thor::LineEditor).to receive(:readline).and_return("y")
+-      expect(shell.file_collision("foo")).to be_true
++      expect(shell.file_collision("foo")).to be true
+     end
+ 
+     it "shows help usage if the user chooses help" do
