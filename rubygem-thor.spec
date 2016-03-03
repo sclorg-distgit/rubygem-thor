@@ -10,7 +10,7 @@
 Summary: Thor is a toolkit for building powerful command-line interfaces
 Name: %{?scl_prefix}rubygem-%{gem_name}
 Version: 0.19.1
-Release: 4%{?dist}
+Release: 5%{?dist}
 Group: Development/Languages
 License: MIT
 URL: http://whatisthor.com/
@@ -18,16 +18,19 @@ Source0: http://rubygems.org/downloads/%{gem_name}-%{version}.gem
 # Update rspec dependency to >= 3
 Patch0: rubygem-thor-0.19.1-update-rspec-dependency.patch
 
+Requires:      %{?scl_prefix_ruby}ruby(release)
+Requires:      %{?scl_prefix_ruby}ruby(rubygems) >= 1.3.5
 BuildRequires: %{?scl_prefix_ruby}rubygems-devel
 BuildRequires: %{?scl_prefix_ruby}ruby(release)
 BuildRequires: %{?scl_prefix_ruby}ruby
 %if %{enable_test} > 0
 BuildRequires: %{?scl_prefix}rubygem(rspec) >= 3
-# Not necessary
+# Not necessary - omitting 2 tests
 #BuildRequires: %{?scl_prefix}rubygem(fakeweb)
 BuildRequires: git
 %endif
 BuildArch: noarch
+Provides:      %{?scl_prefix}rubygem(%{gem_name}) = %{version}
 
 %description
 Thor is a toolkit for building powerful command-line interfaces.
@@ -112,6 +115,9 @@ popd
 %{gem_instdir}/thor.gemspec
 
 %changelog
+* Mon Feb 29 2016 Pavel Valena <pvalena@redhat.com> - 0.19.1-5
+- Add Requires and Provides
+
 * Mon Feb 29 2016 Pavel Valena <pvalena@redhat.com> - 0.19.1-4
 - Add scl macros
 - Update rspec dependency to >= 3
